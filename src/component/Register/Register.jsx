@@ -1,20 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import auth from "../../firebase/firebase.init";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Register = () => {
-  const handleRegister = (e) => {
+    const [successRegister, setSuccessRegister] = useState('')
+    const [errorRegister, setErrorRegister] = useState('')
+
+    const handleRegister = (e) => {
     e.preventDefault();
+
+    // Remove message for next 
+    setSuccessRegister('')
+    setErrorRegister('')
+
     const email = e.target.email.value;
     const password = e.target.password.value;
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user
+        setSuccessRegister('Login Success')
         console.log(user);
     })
     .catch(error => {
-        alert(error.message)
+        // alert(error.message)
+        console.log(error);
+        setErrorRegister(error.message)
     })
 
 
@@ -56,6 +67,15 @@ const Register = () => {
                 </div>
                 <div className="form-control mt-6">
                   <button className="btn btn-primary">Register</button>
+                </div>
+                <div>
+                    {
+                        <p className="text-green-400 text-center"> {successRegister} </p>
+                        
+                    }
+                    {
+                        <p className="text-red-600 text-center">{errorRegister}</p>
+                    }
                 </div>
                 <div className="mt-4">
                   <p>Already have an account?</p>
