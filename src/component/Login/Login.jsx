@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 const Login = () => {
   const [successLogin, setSuccessLogin] = useState('')
   const [errorLogin, setErrorLogin] = useState('')
+  const [messageForget, setMessageForget] = useState('')
   const emailRef = useRef(null)
 
 
@@ -32,14 +33,20 @@ const Login = () => {
 
   const handleForgetPassword = () => {
     const email = emailRef.current.value
-    sendPasswordResetEmail(auth, email)
-    .then(() => {
-      alert('Password reset mail sent')
-    })
-    .catch(error => {
-     alert(error.message)
-    })
-  }
+    setMessageForget('')
+    if(!email){
+      setMessageForget('Email field can not be blank')
+    }else if(!/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)){
+      setMessageForget('This is not a valid email address')
+    }else{sendPasswordResetEmail(auth, email)
+      .then(() => {
+        alert('Password reset mail sent')
+      })
+      .catch(error => {
+       alert(error.message)
+      })
+    }}
+    
   // Login Function End
 
   return (
@@ -60,6 +67,9 @@ const Login = () => {
                     placeholder="Enter Your Email"
                     className="input input-bordered"
                   />
+                  {
+                    <p className="text-red-600 text-left ml-2 opacity-90"> {messageForget} </p> 
+                  }
                 </div>
                 <div className="form-control">
                   <label className="label">
