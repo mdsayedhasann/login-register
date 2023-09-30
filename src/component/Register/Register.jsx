@@ -2,34 +2,59 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import auth from "../../firebase/firebase.init";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const Register = () => {
-    const [successRegister, setSuccessRegister] = useState('')
-    const [errorRegister, setErrorRegister] = useState('')
+  const [successRegister, setSuccessRegister] = useState("");
+  const [errorRegister, setErrorRegister] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-    const handleRegister = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
 
-    // Remove message for next 
-    setSuccessRegister('')
-    setErrorRegister('')
+    // Remove message for next
+    setSuccessRegister("");
+    setErrorRegister("");
 
     const email = e.target.email.value;
     const password = e.target.password.value;
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-        const user = userCredential.user
-        setSuccessRegister('Login Success')
-        console.log(user);
-    })
-    .catch(error => {
-        // alert(error.message)
-        console.log(error);
-        setErrorRegister(error.message)
-    })
+    const checkbox = e.target.terms.checked;
 
 
+    if (password.length < 6) {
+      setErrorRegister("Password should be 6 charecter or longer");
+      return;
+    } else if (!/[A-Z]/.test(password)) {
+      setErrorRegister("Please use at least one Capital letter");
+      return;
+    } else if (!/[1-9]/.test(password)) {
+      setErrorRegister("Please use at least one number");
+      return;
+    } else if (!/[!,@,#,$,%,&,*,(,), -, +]/.test(password)) {
+      setErrorRegister("Please Use at least one special charecter");
+      return;
+    } else if(!checkbox){
+        setErrorRegister('Please select the Terms of Service')
+        return
+    }
+    else {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          setSuccessRegister("Login Success");
+          console.log(user);
+        })
+        .catch((error) => {
+          // alert(error.message)
+          console.log(error);
+          setErrorRegister(error.message);
+        });
+    }
     console.log("Form submitted", email), password;
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
   return (
     <div>
@@ -53,29 +78,50 @@ const Register = () => {
                   <label className="label">
                     <span className="label-text">Password</span>
                   </label>
-                  <input
-                    type="password"
-                    placeholder="Enter Your Password"
-                    className="input input-bordered"
-                    name="password"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter Your Password"
+                      className="input input-bordered  w-full"
+                      name="password"
+                    />
+                    <p
+                      onClick={handleShowPassword}
+                      className="absolute top-4 right-4 cursor-pointer"
+                    >
+                      {showPassword ? (
+                        <AiFillEyeInvisible />
+                      ) : (
+                        <AiFillEye></AiFillEye>
+                      )}
+                    </p>
+                  </div>
                   <label className="label">
                     <a href="#" className="label-text-alt link link-hover">
                       Forgot password?
                     </a>
                   </label>
+
+                  <div className="flex gap-2 mt-1">
+                      <input type="checkbox" name="terms" id="" />
+                    <label className="label">
+                      <p>
+                        Accept our <a href="#">Terms of Service</a>{" "}
+                      </p>
+                    </label>
+                  </div>
                 </div>
-                <div className="form-control mt-6">
+                <div className="form-control mt-0">
                   <button className="btn btn-primary">Register</button>
                 </div>
                 <div>
-                    {
-                        <p className="text-green-400 text-center"> {successRegister} </p>
-                        
-                    }
-                    {
-                        <p className="text-red-600 text-center">{errorRegister}</p>
-                    }
+                  {
+                    <p className="text-green-400 text-center">
+                      {" "}
+                      {successRegister}{" "}
+                    </p>
+                  }
+                  {<p className="text-red-600 text-center">{errorRegister}</p>}
                 </div>
                 <div className="mt-4">
                   <p>Already have an account?</p>
