@@ -1,52 +1,79 @@
+import { ToastContainer, toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import auth from "../../firebase/firebase.init";
-import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useRef, useState } from "react";
 
 const Login = () => {
-  const [successLogin, setSuccessLogin] = useState('')
-  const [errorLogin, setErrorLogin] = useState('')
-  const [messageForget, setMessageForget] = useState('')
-  const emailRef = useRef(null)
-
+  const [successLogin, setSuccessLogin] = useState("");
+  const [errorLogin, setErrorLogin] = useState("");
+  const [messageForget, setMessageForget] = useState("");
+  const emailRef = useRef(null);
 
   // Login Function Start
   const handleLogin = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    setSuccessLogin('')
-    setErrorLogin('')
+    setSuccessLogin("");
+    setErrorLogin("");
     const email = e.target.email.value;
     const password = e.target.password.value;
     console.log("Logged In", email, password);
     signInWithEmailAndPassword(auth, email, password)
-    .then(userCrediential => {
-      const user = userCrediential.user
-      console.log(user);
-      setSuccessLogin('Login Success')
-    })
-    .catch(error => {
-      console.log(error);
-      setErrorLogin(error.message)
-    })
+      .then((userCrediential) => {
+        const user = userCrediential.user;
+        console.log(user);
+        toast.success("Login Success", {
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorLogin(error.message);
+      });
   };
 
   const handleForgetPassword = () => {
-    const email = emailRef.current.value
-    setMessageForget('')
-    if(!email){
-      setMessageForget('Email field can not be blank')
-    }else if(!/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)){
-      setMessageForget('This is not a valid email address')
-    }else{sendPasswordResetEmail(auth, email)
-      .then(() => {
-        alert('Password reset mail sent')
-      })
-      .catch(error => {
-       alert(error.message)
-      })
-    }}
-    
+    // Toast
+    const email = emailRef.current.value;
+    setMessageForget("");
+    if (!email) {
+      setMessageForget("Email field can not be blank");
+    } else if (!/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      setMessageForget("This is not a valid email address");
+    } else {
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          // Toast
+          toast.success("Password reset link has sent to your Email", {
+            position: "bottom-right",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          // Toast
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
+  };
+
   // Login Function End
 
   return (
@@ -68,7 +95,10 @@ const Login = () => {
                     className="input input-bordered"
                   />
                   {
-                    <p className="text-red-600 text-left ml-2 opacity-90"> {messageForget} </p> 
+                    <p className="text-red-600 text-left ml-2 opacity-90">
+                      {" "}
+                      {messageForget}{" "}
+                    </p>
                   }
                 </div>
                 <div className="form-control">
@@ -82,7 +112,11 @@ const Login = () => {
                     className="input input-bordered"
                   />
                   <label className="label">
-                    <a onClick={handleForgetPassword} href="#" className="label-text-alt link link-hover">
+                    <a
+                      onClick={handleForgetPassword}
+                      href="#"
+                      className="label-text-alt link link-hover"
+                    >
                       Forgot password?
                     </a>
                   </label>
@@ -90,13 +124,11 @@ const Login = () => {
                 <div className="form-control mt-6">
                   <button className="btn btn-primary">Login</button>
                 </div>
-            {
-              successLogin && <p className="text-green-500"> {successLogin} </p> 
-            }
+                {successLogin && (
+                  <p className="text-green-500"> {successLogin} </p>
+                )}
 
-            {
-              errorLogin && <p className="text-red-600"> {errorLogin} </p>
-            }
+                {errorLogin && <p className="text-red-600"> {errorLogin} </p>}
                 <div className="mt-4">
                   <p>New in the website?</p>
                   <Link to="/register">
@@ -108,6 +140,18 @@ const Login = () => {
               </div>
             </form>
           </div>
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </div>
       </div>
     </div>
