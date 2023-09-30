@@ -41,7 +41,7 @@ const Register = () => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          setSuccessRegister("Login Success");
+          setSuccessRegister("Registration Success");
           console.log(user);
         })
         .catch((error) => {
@@ -96,11 +96,6 @@ const Register = () => {
                       )}
                     </p>
                   </div>
-                  <label className="label">
-                    <a href="#" className="label-text-alt link link-hover">
-                      Forgot password?
-                    </a>
-                  </label>
 
                   <div className="flex gap-2 mt-1">
                       <input type="checkbox" name="terms" id="" />

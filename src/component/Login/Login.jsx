@@ -1,20 +1,44 @@
 import { Link } from "react-router-dom";
+import auth from "../../firebase/firebase.init";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
 
 const Login = () => {
+  const [successLogin, setSuccessLogin] = useState('')
+
+  // Login Function Start
+  const handleLogin = (e) => {
+    e.preventDefault()
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    console.log("Logged In", email, password);
+    signInWithEmailAndPassword(auth, email, password)
+    .then(userCrediential => {
+      const user = userCrediential.user
+      console.log(user);
+      setSuccessLogin('Login Success')
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  };
+  // Login Function End
+
   return (
     <div>
       <div className="">
         <div className="flex justify-center mt-10">
           <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-            <form>
+            <form onSubmit={handleLogin}>
               <div className="card-body">
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text">Email</span>
                   </label>
                   <input
-                    type="text"
-                    placeholder="email"
+                    type="email"
+                    name="email"
+                    placeholder="Enter Your Email"
                     className="input input-bordered"
                   />
                 </div>
@@ -23,8 +47,9 @@ const Login = () => {
                     <span className="label-text">Password</span>
                   </label>
                   <input
-                    type="text"
-                    placeholder="password"
+                    type="password"
+                    name="password"
+                    placeholder="Enter Your Password"
                     className="input input-bordered"
                   />
                   <label className="label">
@@ -36,6 +61,10 @@ const Login = () => {
                 <div className="form-control mt-6">
                   <button className="btn btn-primary">Login</button>
                 </div>
+            {
+              successLogin && 
+              <p className="text-green-500"> {successLogin} </p>
+            }
                 <div className="mt-4">
                   <p>New in the website?</p>
                   <Link to="/register">
