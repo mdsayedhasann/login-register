@@ -5,10 +5,15 @@ import { useState } from "react";
 
 const Login = () => {
   const [successLogin, setSuccessLogin] = useState('')
+  const [errorLogin, setErrorLogin] = useState('')
+
 
   // Login Function Start
   const handleLogin = (e) => {
     e.preventDefault()
+
+    setSuccessLogin('')
+    setErrorLogin('')
     const email = e.target.email.value;
     const password = e.target.password.value;
     console.log("Logged In", email, password);
@@ -20,6 +25,7 @@ const Login = () => {
     })
     .catch(error => {
       console.log(error);
+      setErrorLogin(error.message)
     })
   };
   // Login Function End
@@ -62,8 +68,11 @@ const Login = () => {
                   <button className="btn btn-primary">Login</button>
                 </div>
             {
-              successLogin && 
-              <p className="text-green-500"> {successLogin} </p>
+              successLogin && <p className="text-green-500"> {successLogin} </p> 
+            }
+
+            {
+              errorLogin && <p className="text-red-600"> {errorLogin} </p>
             }
                 <div className="mt-4">
                   <p>New in the website?</p>
