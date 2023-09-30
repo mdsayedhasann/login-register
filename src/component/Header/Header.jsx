@@ -1,10 +1,17 @@
 import React from "react";
+import { Link, NavLink } from "react-router-dom";
 
 const Header = () => {
   const links = (
     <>
       <li>
-        <a>Item 1</a>
+        <NavLink to="/">Home</NavLink>
+      </li>
+      <li>
+        <NavLink to="/register">Register</NavLink>
+      </li>
+      <li>
+        <NavLink to="/login">Login</NavLink>
       </li>
     </>
   );
@@ -37,7 +44,7 @@ const Header = () => {
             </ul>
           </div>
           <a className="btn btn-ghost normal-case text-xl">
-            Test Login Register
+            <Link to="/">Test Login Register</Link>
           </a>
         </div>
         <div className="navbar-end hidden lg:flex">
