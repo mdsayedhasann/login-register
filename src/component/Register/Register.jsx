@@ -1,22 +1,41 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import auth from "../../firebase/firebase.init";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Register = () => {
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        const user = userCredential.user
+        console.log(user);
+    })
+    .catch(error => {
+        alert(error.message)
+    })
+
+
+    console.log("Form submitted", email), password;
+  };
   return (
     <div>
       <div className="">
         <div className="flex justify-center mt-10">
           <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-            <form>
+            <form onSubmit={handleRegister}>
               <div className="card-body">
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text">Email</span>
                   </label>
                   <input
-                    type="text"
-                    placeholder="email"
+                    type="email"
+                    placeholder="Enter Your Email"
                     className="input input-bordered"
+                    name="email"
                   />
                 </div>
                 <div className="form-control">
@@ -24,9 +43,10 @@ const Register = () => {
                     <span className="label-text">Password</span>
                   </label>
                   <input
-                    type="text"
-                    placeholder="password"
+                    type="password"
+                    placeholder="Enter Your Password"
                     className="input input-bordered"
+                    name="password"
                   />
                   <label className="label">
                     <a href="#" className="label-text-alt link link-hover">
