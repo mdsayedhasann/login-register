@@ -1,7 +1,7 @@
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import auth from "../../firebase/firebase.init";
-import "react-toastify/dist/ReactToastify.css";
 import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -23,6 +23,8 @@ const Login = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     console.log("Logged In", email, password);
+
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCrediential) => {
         const user = userCrediential.user;

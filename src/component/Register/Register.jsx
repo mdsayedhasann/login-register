@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import auth from "../../firebase/firebase.init";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [successRegister, setSuccessRegister] = useState("");
@@ -20,7 +22,7 @@ const Register = () => {
     const password = e.target.password.value;
     const checkbox = e.target.terms.checked;
 
-
+  
     if (password.length < 6) {
       setErrorRegister("Password should be 6 charecter or longer");
       return;
@@ -41,6 +43,36 @@ const Register = () => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
+          sendEmailVerification(userCredential.user)
+          .then(() =>{
+            // Toast 
+            toast.success("Email verification mail has been sent", {
+              position: "bottom-right",
+              autoClose: 2500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            // Toast 
+          })
+          .catch((error) => {
+            // Error Toast
+            toast.error(error.message, {
+              position: "bottom-right",
+              autoClose: 2500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            }); 
+            // Error Toast 
+            
+          })
           setSuccessRegister("Registration Success");
           console.log(user);
         })
@@ -128,6 +160,18 @@ const Register = () => {
                 </div>
               </div>
             </form>
+            <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           </div>
         </div>
       </div>
