@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import auth from "../../firebase/firebase.init";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
+import { useRef, useState } from "react";
 
 const Login = () => {
   const [successLogin, setSuccessLogin] = useState('')
   const [errorLogin, setErrorLogin] = useState('')
+  const emailRef = useRef(null)
 
 
   // Login Function Start
@@ -28,6 +29,17 @@ const Login = () => {
       setErrorLogin(error.message)
     })
   };
+
+  const handleForgetPassword = () => {
+    const email = emailRef.current.value
+    sendPasswordResetEmail(auth, email)
+    .then(() => {
+      alert('Password reset mail sent')
+    })
+    .catch(error => {
+     alert(error.message)
+    })
+  }
   // Login Function End
 
   return (
@@ -44,6 +56,7 @@ const Login = () => {
                   <input
                     type="email"
                     name="email"
+                    ref={emailRef}
                     placeholder="Enter Your Email"
                     className="input input-bordered"
                   />
@@ -59,7 +72,7 @@ const Login = () => {
                     className="input input-bordered"
                   />
                   <label className="label">
-                    <a href="#" className="label-text-alt link link-hover">
+                    <a onClick={handleForgetPassword} href="#" className="label-text-alt link link-hover">
                       Forgot password?
                     </a>
                   </label>
